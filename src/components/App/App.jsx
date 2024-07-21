@@ -1,23 +1,21 @@
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "../../redux/store";
-import ContactForm from "../ContactForm/ContactForm";
-import ContactList from "../ContactList/ContactList";
-import SearchBox from "../SearchBox/SearchBox";
-import css from "./App.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { fetchContacts } from "../../redux/operations";
 
 function App() {
+  const dispatch = useDispatch();
+  const { items, isLoading, error } = useSelector((state) => state.contacts);
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <div>
-          <h1 className={css.header}>Contact Manager</h1>
-          <ContactForm />
-          <SearchBox />
-          <ContactList />
-        </div>
-      </PersistGate>
-    </Provider>
+    <div>
+      {isLoading && <p>Loading tasks...</p>}
+      {error && <p>{error}</p>}
+      {items.length > 0 && <pre>{JSON.stringify(items, null, 2)}</pre>}
+    </div>
   );
 }
 
