@@ -1,21 +1,32 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchContacts } from "../../redux/operations";
+import ContactForm
+  from "../ContactForm/ContactForm";
+import SearchBox from '../SearchBox/SearchBox'
+import ContactList from '../ContactList/ContactList'
+import { getError, getIsLoading } from "../../redux/selectors";
 
 function App() {
   const dispatch = useDispatch();
-  const { items, isLoading, error } = useSelector((state) => state.contacts);
 
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
+  const Layout = ({ children }) => {
+  return <main>{children}</main>;
+};
 
   return (
-    <div>
-      {isLoading && <p>Loading tasks...</p>}
-      {error && <p>{error}</p>}
-      {items.length > 0 && <pre>{JSON.stringify(items, null, 2)}</pre>}
-    </div>
+    <Layout>
+      <div>
+        <h1>Contact Manager</h1>
+        <ContactForm />
+        {getIsLoading && !getError && <b>Request in progress...</b>}
+        <SearchBox />
+        <ContactList />
+      </div>
+    </Layout>
   );
 }
 
