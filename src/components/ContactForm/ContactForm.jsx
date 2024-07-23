@@ -1,10 +1,11 @@
-import { useId } from "react";
+
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import Button from "../Button/Button";
-import { addContact } from "../../redux/contactsSlice";
+
 import css from "./ContactForm.module.css";
+import { selectContacts } from "../../redux/selectors";
 
 const FeedbackSchema = Yup.object().shape({
   name: Yup.string()
@@ -21,46 +22,40 @@ const FeedbackSchema = Yup.object().shape({
 
 const ContactForm = () => {
   const dispatch = useDispatch();
-  const initialValues = {
-    name: "",
-    number: "",
-  };
 
-  const nameFieldId = useId();
-  const numberFieldId = useId();
-
-  const handleSubmit = (values, { resetForm }) => {
-    dispatch(addContact({ name: values.name, number: values.number }));
-    resetForm();
+  const handleSubmit = e => {
+    e.preventDefault();
+    const form = e.target;
+    dispatch(selectContacts(e.target.elements.text.value));
+    form.reset();
   };
 
   return (
     <Formik
-      initialValues={initialValues}
+      /* initialValues={contactsSlice} */
       onSubmit={handleSubmit}
       validationSchema={FeedbackSchema}
     >
       <Form className={css.container}>
         <div className={css.containerItem}>
           <div className={css.fieldContainer}>
-            <label htmlFor={nameFieldId}>Name</label>
+            <label>Name</label>
             <Field
               className={css.input}
               name="name"
               type="text"
-              id={nameFieldId}
             />
             <div className={css.errorMessage}>
               <ErrorMessage name="name" component="div" />
             </div>
           </div>
           <div className={css.fieldContainer}>
-            <label htmlFor={numberFieldId}>Number</label>
+            <label>Number</label>
             <Field
               className={css.input}
               name="number"
               type="text"
-              id={numberFieldId}
+             
             />
             <div className={css.errorMessage}>
               <ErrorMessage name="number" component="div" />
