@@ -5,7 +5,10 @@ import ContactForm
   from "../ContactForm/ContactForm";
 import SearchBox from '../SearchBox/SearchBox'
 import ContactList from '../ContactList/ContactList'
-import { selectError, selectIsLoading } from "../../redux/selectors";
+import { selectError, selectIsLoading } from "../../redux/contactsSlice";
+import css from './App.module.css'
+import { Comment } from "react-loader-spinner";
+
 
 function App() {
   const dispatch = useDispatch();
@@ -14,21 +17,21 @@ function App() {
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
-  const Layout = ({ children }) => {
-  return <main>{children}</main>;
-};
+ 
 
-  return (
-    <Layout>
-      <div>
-        <h1>Contact Manager</h1>
-        <ContactForm />
-        {isLoading && !error && <b>Request in progress...</b>}
-        <SearchBox />
-        <ContactList />
-      </div>
-    </Layout>
-  );
+ return (
+   <div className={css.appContainer}>
+     <h1 className={css.header}>Contact Manager</h1>
+     <ContactForm />
+     {isLoading && !error && (
+       <div className={css.loaderContainer}>
+         <Comment />
+       </div>
+     )}
+     <SearchBox />
+     <ContactList />
+   </div>
+ );
 }
 
 export default App;

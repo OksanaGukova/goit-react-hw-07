@@ -1,11 +1,9 @@
-
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
-import Button from "../Button/Button";
-
+import { addContact } from "../../redux/operations";
 import css from "./ContactForm.module.css";
-import { selectContacts } from "../../redux/selectors";
+import Button from "../Button/Button";
 
 const FeedbackSchema = Yup.object().shape({
   name: Yup.string()
@@ -23,40 +21,29 @@ const FeedbackSchema = Yup.object().shape({
 const ContactForm = () => {
   const dispatch = useDispatch();
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    const form = e.target;
-    dispatch(selectContacts(e.target.elements.text.value));
-    form.reset();
+  const handleSubmit = (values, { resetForm }) => {
+    dispatch(addContact(values));
+    resetForm();
   };
 
   return (
     <Formik
-      /* initialValues={contactsSlice} */
-      onSubmit={handleSubmit}
+      initialValues={{ name: "", number: "" }}
       validationSchema={FeedbackSchema}
+      onSubmit={handleSubmit}
     >
       <Form className={css.container}>
         <div className={css.containerItem}>
           <div className={css.fieldContainer}>
             <label>Name</label>
-            <Field
-              className={css.input}
-              name="name"
-              type="text"
-            />
+            <Field className={css.input} name="name" type="text" />
             <div className={css.errorMessage}>
               <ErrorMessage name="name" component="div" />
             </div>
           </div>
           <div className={css.fieldContainer}>
             <label>Number</label>
-            <Field
-              className={css.input}
-              name="number"
-              type="text"
-             
-            />
+            <Field className={css.input} name="number" type="text" />
             <div className={css.errorMessage}>
               <ErrorMessage name="number" component="div" />
             </div>
