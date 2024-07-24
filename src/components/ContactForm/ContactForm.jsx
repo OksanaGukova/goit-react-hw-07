@@ -7,7 +7,10 @@ import Button from "../Button/Button";
 
 const FeedbackSchema = Yup.object().shape({
   name: Yup.string()
-    .matches(/^[A-Za-z]+$/, "Name must contain only letters")
+    .matches(
+      /^(?!.*\.\.)(?!\s)(?!.*\s$)[A-Za-z. ]+$/,
+      "Name must contain only letters"
+    )
     .min(3, "Too Short!")
     .max(50, "Too Long!")
     .required("Required"),
